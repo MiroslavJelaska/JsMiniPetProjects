@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EM Plotter</title>
+
+    <link rel="stylesheet"  href="../_shared/reset.css" type="text/css"></link>
+    <link rel="stylesheet"  href="main.css" type="text/css"></link>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.js"></script>
+    <script type="text/javascript">
+        (function(SimulatorMath){
+
+            SimulatorMath.Location = function(x, y){
+
+                return {
+                    x: x,
+                    y: y
+                }
+            };
+            SimulatorMath.Vector = function(location, magnitude, direction){
+
+                return {
+                    location:  location,
+                    magnitude: magnitude,
+                    direction: direction
+                }
+            };
+        })(window.SimulatorMath = window.SimulatorMath || {});
+
+        (function(Physics){
+
+            Physics.Particle = function(location, charge){
+
+                return {
+                    location: location,
+                    charge:   charge
+                }
+            };
+        })(window.Physics = window.Physics || {});
+
+        (function(){
+            Canvas = function(canvas){
+                var allParticles = [];
+                var canvasContext = canvas.getContext('2d');
+
+                return {
+                    Initialise: function(){
+                        canvas.width = window.innerWidth;
+                        canvas.height = window.innerHeight;
+                    },
+
+                    AddParticle: function(particle){
+                        allParticles.push(particle);
+                    },
+
+                    Render: function(){
+                        allParticles.forEach(function(particle)
+                        {
+                            console.log("Particle", particle);
+                            canvasContext.beginPath();
+                            canvasContext.arc(particle.location.x, particle.location.y, particle.charge, 2*Math.PI, false);
+                            canvasContext.fillStyle='green';
+                            canvasContext.fill();
+                            canvasContext.closePath();
+                        })
+                    }
+                }
+            };
+        })();
+
+        $(function(){
+
+            var canvas = new Canvas($('canvas')[0]);
+            canvas.Initialise();
+            canvas.AddParticle(new Physics.Particle(new SimulatorMath.Location(41,2), 8));
+            canvas.Render();
+
+        });
+    </script>
+    <style type="text/css">
+
+    </style>
+</head>
+<body >
+    <div>
+        <canvas ></canvas>
+    </div>
+</body>
+</html>
