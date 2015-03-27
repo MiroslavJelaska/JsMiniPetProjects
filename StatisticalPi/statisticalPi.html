@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+
+    <link href="../_shared/reset-minified.css"  media="all" rel="stylesheet">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.js"></script>
+    <script type="text/javascript">
+
+        $(function(){
+            var squareSideLength = 350;
+            var context = $('canvas')[0].getContext('2d');
+            var currentEstimateLabel = $('.currentEstimate').first();
+
+            var insideCircle = 0,
+                outsideCircle = 0.;
+            var calculateEstimate = function(){
+                return (insideCircle + outsideCircle != 0)
+                    ? 4.0 *  insideCircle / (insideCircle + outsideCircle)
+                    : 0;
+            }
+            var displayEstimate = function() { currentEstimateLabel.html(calculateEstimate()); }
+
+            var initialize = function(){
+                context.canvas.width  = squareSideLength;
+                context.canvas.height = squareSideLength;
+
+                displayEstimate();
+                context.beginPath();
+                context.fillStyle = "rgb(255, 255, 157)";
+                context.arc(squareSideLength/2, squareSideLength/2, squareSideLength/2, 0, 2*Math.PI, false);
+                context.fill();
+                context.closePath();
+            };
+            initialize();
+
+            var startAddingRandomDots = function(){
+
+                var getRandomDot = function(){
+                    return {
+                        x : Math.random() * squareSideLength,
+                        y : Math.random() * squareSideLength
+                    };
+                };
+                var isDotInsideCircle = function(dot){
+                    var radius = squareSideLength / 2;
+                    return Math.sqrt(dot.x - radius, 2) + Math.sqrt(dot.y - radius, 2) < Math.pow(radius, 2);
+                };
+                var drawDot = function(dot){
+                    context.beginPath();
+                    context.fillStyle = "rgb(231, 76, 60)";
+                    context.arc(dot.x, dot.y, 1, 0, 2 * Math.PI, false);
+                    context.fill();
+                }
+
+                /* http://stackoverflow.com/questions/3138756/jquery-repeat-function-every-60-seconds */
+                var loopFunction = (function(){
+
+                    var newDot = getRandomDot();
+                    isDotInsideCircle(newDot) ? insideCircle++ : outsideCircle++;
+                    console.log(insideCircle, outsideCircle);
+                    drawDot(newDot);
+                    displayEstimate();
+
+                    setTimeout(loopFunction, 10);
+                });
+
+                loopFunction();
+            };
+
+            $('#startButton').on('click',
+                (function(){
+
+                    var isRunning = false;
+
+                    return function(){
+
+                        if(!isRunning) {
+
+                            startAddingRandomDots();
+                            isRunning = true;
+                        }
+                    };
+                })()
+            );
+         });
+    </script>
+    <style type="text/css">
+        html       { background-color: #2C3E50; }
+        canvas     { background-color: #00A388; }
+        .wrapper   { width: 500px; margin: 0 auto;
+                     background-color: #ECF0F1; padding: 2em 2em; }
+        .wrapper * {
+            display: block;
+            margin: 0 auto;
+            margin-top: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <canvas></canvas>
+        <button id="startButton">Start</button>
+        <span>Current estimate of π: <span class="currentEstimate"></span></span>
+        <span>Acurate estimate of π: 3.14159265359</span>
+
+    </div>
+
+
+</body>
+</html>
