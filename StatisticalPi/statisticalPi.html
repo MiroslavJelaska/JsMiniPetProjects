@@ -12,17 +12,27 @@
             var squareSideLength = 350;
             var context = $('canvas')[0].getContext('2d');
             var currentEstimateLabel = $('.currentEstimate').first();
+            var totalNumberOfDotsLabel = $('.totalDots').first();
+
 
             var insideCircle = 0,
-                outsideCircle = 0.;
+                outsideCircle = 0;
             var calculateEstimate = function(){
                 return (insideCircle + outsideCircle != 0)
                     ? 4.0 *  insideCircle / (insideCircle + outsideCircle)
                     : 0;
             }
-            var displayEstimate = function() { currentEstimateLabel.html(calculateEstimate()); }
+            var displayEstimate = function() {
+
+                currentEstimateLabel.html(calculateEstimate());
+            }
+            var displayTotalNumberOfDots = function(){
+
+                totalNumberOfDotsLabel.html(insideCircle + outsideCircle);
+            }
 
             var initialize = function(){
+
                 context.canvas.width  = squareSideLength;
                 context.canvas.height = squareSideLength;
 
@@ -33,6 +43,7 @@
                 context.fill();
                 context.closePath();
             };
+
             initialize();
 
             var startAddingRandomDots = function(){
@@ -44,7 +55,9 @@
                     };
                 };
                 var isDotInsideCircle = function(dot){
+
                     var radius = squareSideLength / 2;
+
                     return Math.sqrt(dot.x - radius, 2) + Math.sqrt(dot.y - radius, 2) < Math.pow(radius, 2);
                 };
                 var drawDot = function(dot){
@@ -62,6 +75,7 @@
                     console.log(insideCircle, outsideCircle);
                     drawDot(newDot);
                     displayEstimate();
+                    displayTotalNumberOfDots();
 
                     setTimeout(loopFunction, 10);
                 });
@@ -96,14 +110,20 @@
             margin: 0 auto;
             margin-top: 1em;
         }
+        span {
+            display: inline;
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <canvas></canvas>
+
+
         <button id="startButton">Start</button>
         <span>Current estimate of π: <span class="currentEstimate"></span></span>
         <span>Acurate estimate of π: 3.14159265359</span>
+        <span class="totalDotsContainer">Total dots: <span class="totalDots"></span></span>
 
     </div>
 
