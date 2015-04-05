@@ -58,7 +58,7 @@
 
                     var radius = squareSideLength / 2;
 
-                    return Math.sqrt(dot.x - radius, 2) + Math.sqrt(dot.y - radius, 2) < Math.pow(radius, 2);
+                    return Math.pow(dot.x - radius, 2) + Math.pow(dot.y - radius, 2) < Math.pow(radius, 2);
                 };
                 var drawDot = function(dot){
                     context.beginPath();
