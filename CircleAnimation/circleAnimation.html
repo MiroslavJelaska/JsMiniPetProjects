@@ -79,6 +79,14 @@
                     x: (canvasWidth/2 - (radius*1.25)),
                     y: (canvasWidth/2 - (radius*1.25))
                 });
+                triangle2.animate(500).transform({
+                    x: -x2*0.5,
+                    y: -y2*0.5
+                });
+                triangle.animate(500).transform({
+                    x: -x*0.5,
+                    y: -y*0.5
+                });
             });
 
 
