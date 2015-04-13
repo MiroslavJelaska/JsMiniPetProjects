@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+
+    <link href="../_shared/reset-minified.css"  media="all" rel="stylesheet">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="../_shared/svg.min.js"></script> <!-- http://svgjs.com/-->
+    <script type="text/javascript" src="../_shared/svg.easing.min.js"></script> <!-- https://github.com/wout/svg.easing.js -->
+
+
+    <script type="text/javascript">
+
+        $(function(){
+            var getTriangle = function(ratio){
+                return {
+                    a : 20 * (ratio),
+                    h : 25 * (ratio)};
+            };
+            var getTrianglePoints = function(triangle){
+                return '0,0 ' + triangle.a +',0 ' + triangle.a/2 + ',' + triangle.h;
+            };
+            var triangle = getTriangle(0.6);
+            var triangle2 = getTriangle(0.6);
+
+            var canvasWidth = 100;
+            var draw = SVG('animationWrapper').size(canvasWidth, canvasWidth);
+            var triangle = draw.polygon(getTrianglePoints(triangle)).attr({ fill: '#8209d1' }).x(canvasWidth/2 - triangle.a/2).y(canvasWidth/2 - triangle.h/2).rotate(-90);
+            var triangle2 =  draw.polygon(getTrianglePoints(triangle2)).attr({ fill: '#039176' }).x(canvasWidth/2 - triangle2.a/2).y(canvasWidth/2 - triangle2.h/2).rotate(-90);
+
+
+            var radius = canvasWidth/2;
+            var circle = draw.circle(radius).attr({ fill: '#131313' }).x(canvasWidth/2 -radius/2).y(canvasWidth/2 - radius/2);
+
+
+            var angle = null,
+                x = null,
+                y = null;
+
+            var angle2 = null,
+                x2 = null,
+                y2 = null;
+
+            circle.mouseover(function(){
+
+                angle = Math.random() * 360;
+                angle2 = Math.random() * 360;
+
+                var exitDistance = canvasWidth/3;
+                //angle = 150;
+                x = exitDistance * Math.cos(angle/360*(2*Math.PI));
+                y = exitDistance * Math.sin(angle/360*(2*Math.PI));
+                x2 = exitDistance * Math.cos(angle2/360*(2*Math.PI));
+                y2 = exitDistance * Math.sin(angle2/360*(2*Math.PI));
+                console.log(angle);
+                console.log(angle2);
+                triangle.rotate(angle - 90);
+                triangle.animate(500).transform({
+                    x: x,
+                    y: y
+                });
+                triangle2.rotate(angle2 - 90);
+                triangle2.animate(500).transform({
+                    x: x2,
+                    y: y2
+                });
+                circle.animate(300).transform({
+                    scaleX : 0.5,
+                    scaleY : 0.5,
+                    x: (canvasWidth/2 - (radius*0.5)),
+                    y: (canvasWidth/2 - (radius*0.5))
+                });
+            });
+            circle.mouseout(function(){
+                circle.animate(300).transform({
+                    scaleX : 1.25,
+                    scaleY : 1.25,
+                    x: (canvasWidth/2 - (radius*1.25)),
+                    y: (canvasWidth/2 - (radius*1.25))
+                });
+            });
+
+
+        });
+    </script>
+    <style type="text/css">
+        html       { background-color: white; }
+        .wrapper   { width: 100px; height: 100px; margin: 0 auto; background-color: white;}
+
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="animationWrapper">
+
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" >
+                <circle class="circle" cx="50" cy="50" r="25" style="fill:#111"/>
+                <polygon points="0,0  20,0  10,25" style="fill:#01A2A6;" class="triangle"/>
+            </svg> -->
+        </div>
+
+    </div>
+
+
+</body>
+</html>
