@@ -9,33 +9,118 @@
     <script type="text/javascript">
 
         $(function(){
-            var drawFigure = function(svg){
-                var circle = svg.circle(50, 50, 25, { fill: '#111' });
-            }
+            var squareSideLength = 350;
+            var radius = squareSideLength / 2;
+            var context = $('canvas')[0].getContext('2d');
+            var currentEstimateLabel = $('.currentEstimate').first();
+            var totalNumberOfDotsLabel = $('.totalDots').first();
 
-            $('animationWrapper').svg({ onLoad: drawFigure })
-        });
+
+            var insideCircle = 0,
+                outsideCircle = 0;
+            var calculateEstimate = function(){
+
+                return (insideCircle + outsideCircle != 0)
+                    ? 4.0 *  insideCircle / (insideCircle + outsideCircle)
+                    : 0;
+            };
+            var displayEstimate = function() {
+
+                currentEstimateLabel.html(calculateEstimate());
+            };
+            var displayTotalNumberOfDots = function(){
+
+                totalNumberOfDotsLabel.html(insideCircle + outsideCircle);
+            };
+            var initialize = function(){
+
+                context.canvas.width  = squareSideLength;
+                context.canvas.height = squareSideLength;
+
+                displayEstimate();
+                context.beginPath();
+                context.fillStyle = "rgb(172, 240, 242)";
+                context.arc(radius, radius, radius, 0, 2*Math.PI, false);
+                context.fill();
+                context.closePath();
+            };
+
+            initialize();
+
+            var startAddingRandomDots = function(){
+
+                var getRandomDot = function(){
+                    return {
+                        x : Math.random() * squareSideLength,
+                        y : Math.random() * squareSideLength
+                    };
+                };
+                var isDotInsideCircle = function(dot){
+
+                    return Math.pow(dot.x - radius, 2) + Math.pow(dot.y - radius, 2) < Math.pow(radius, 2);
+                };
+                var drawDot = function(dot){
+                    context.beginPath();
+                    context.fillStyle = "rgb(220, 53, 34)";
+                    context.arc(dot.x, dot.y, 1, 0, 2 * Math.PI, false);
+                    context.fill();
+                }
+
+                /* http://stackoverflow.com/questions/3138756/jquery-repeat-function-every-60-seconds */
+                var loopFunction = (function(){
+
+                    var newDot = getRandomDot();
+                    isDotInsideCircle(newDot) ? insideCircle++ : outsideCircle++;
+                    console.log(insideCircle, outsideCircle);
+                    drawDot(newDot);
+                    displayEstimate();
+                    displayTotalNumberOfDots();
+
+                    setTimeout(loopFunction, 10);
+                });
+
+                loopFunction();
+            };
+
+            $('#startButton').on('click',
+                (function(){
+
+                    var isRunning = false;
+
+                    return function(){
+
+                        if(!isRunning) {
+
+                            startAddingRandomDots();
+                            isRunning = true;
+                        }
+                    };
+                })()
+            );
+    });
     </script>
     <style type="text/css">
-        html       { background-color: white; }
-        .animationWrapper   { width: 100px; height: 100px; margin: 0 auto; background-color: aliceblue;}
-        .triangle { width: 20px; height: 25px; }
-        .triangle:hover {
-                transition: 1.s ease-in-out;
-                translate(25px, 25px);}
+        canvas     { background-color: #F3FFE2; }
+        .wrapper   { width: 500px; margin: 0 auto;
+                     background-color: #ECF0F1; padding: 2em 2em; }
+        .wrapper * {
+            display: block;
+            margin: 0 auto;
+            margin-top: 1em;
+        }
+        span {
+            display: inline;
+        }
 
     </style>
 </head>
 <body>
     <div class="wrapper">
-        <div class="animationWrapper">
-
-            <!--<svg xmlns="http://www.w3.org/2000/svg" >
-                <circle class="circle" cx="50" cy="50" r="25" style="fill:#111"/>
-                <polygon points="0,0  20,0  10,25" style="fill:#01A2A6;" class="triangle"/>-->
-            </svg>
-        </div>
-
+        <canvas></canvas>
+        <button id="startButton">Start</button>
+        <span>Current estimate of π: <span class="currentEstimate"></span></span>
+        <span>Acurate estimate of π: 3.14159265359</span>
+        <span class="totalDotsContainer">Total dots: <span class="totalDots"></span></span>
     </div>
 
 
