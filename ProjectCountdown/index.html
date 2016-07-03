@@ -177,7 +177,7 @@
             var startingDate = moment('2016-06-27');
             var deadlineDate = moment('2016-09-01');
             
-            function refreshDesplay(){
+            function refreshDisplay(){
                 var currentDate = moment();
                 var totalTimelineLength = deadlineDate.diff(startingDate, 'days');
                 var numberOfDaysLeft = deadlineDate.diff(currentDate, 'days');
@@ -196,9 +196,9 @@
             }
 
             var minuteDuration = 60 * 1000;
-            refreshDesplay();
+            refreshDisplay();
             setTimeout(function(){
-                refreshDesplay();
+                refreshDisplay();
             }, minuteDuration);
         });
     </script>
