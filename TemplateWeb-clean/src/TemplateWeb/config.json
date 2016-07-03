@@ -1,0 +1,10 @@
+{
+  "AppSettings": {
+    "SiteTitle": "TemplateWeb"
+  },
+  "Data": {
+    "DefaultConnection": {
+      "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-TemplateWeb-d6c6aa0e-e39f-49c5-b07d-625f53b975e4;Trusted_Connection=True;MultipleActiveResultSets=true"
+    }
+  }
+}

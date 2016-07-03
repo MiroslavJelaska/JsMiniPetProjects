@@ -1,0 +1,322 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <style type="text/css">
+      .main-wrap{
+          width: 80%;
+          margin: 0 auto;
+      }
+      .countdown-text{
+          text-align: center;
+          text-transform: uppercase;
+          font-family: sans-serif, 'Open Sans';
+          font-size: 4em;
+      }
+      .countdown-text .number {
+          font-size: 4em;
+      }
+      .calendarWrap{
+          display: block;
+      }
+      .deadline {
+          width: 100%;
+          position: relative;
+          clear: right;
+          line-height: 1.5em;
+          color: white;
+      }
+      .deadline:after {
+          content: '';
+          display: table;
+          clear: both; 
+      }
+      .activity{
+          display: inline;
+          height: 1.2em;
+      }
+      .activity:nth-child(1) {
+        background: #36B1BF;
+        width: 50%;
+        float: left;
+      }
+      .activity:nth-child(2) {
+        background: #F5A503;
+        width: 30%;
+        float: left;
+      }
+      .activity:nth-child(3) {
+        background: #F2385A;
+        width: 20%;
+        float: left;
+      }
+      .calendar{
+          position: relative;
+          padding-top: 0.5em;
+      }
+
+      .week{
+          display: inline-block;
+          
+          width: 10%;
+      }
+      .week:after {
+          content: '';
+          display: table;
+          clear: both; 
+      }
+      .week .day{
+          
+          display: block;
+          text-align: center;
+          border: 2px black thick;
+          width: 4.5em;
+          height: 4.5em;
+          overflow: hidden;
+          display: table;
+          font-family: sans-serif, 'Open Sans';
+          font-size: 1.1em;
+      }
+      .week .day.day-number{
+          background: #f5f5f5;
+          margin: 0 auto;
+      }
+      .week .day .number{
+          display: table-cell;
+          vertical-align: middle;
+      }
+      .week .day.day-name{
+          margin: 0;
+      }
+      .week.week-name{
+          position: absolute;
+          left: -6em;
+          background-color: transparent;
+      }
+      .week.week-name .day-name .name{
+          display: table-cell;
+          color: grey;
+          vertical-align: middle;
+          text-transform: uppercase;
+      }
+      .week .day.ended{
+          background-color: #530031;
+          color: white;
+      }
+      .week .day.today{
+          background-color: #FF3D2E;
+          color: white;
+      }
+      .week .day.not-available{
+          background-color: #2E3233;
+          color: white;
+      }
+      
+      
+      .months {
+          width: 100%;
+          position: relative;
+          clear: right;
+          line-height: 1.5em;
+          color: white;
+      }
+      .months:after {
+          content: '';
+          display: table;
+          clear: both; 
+      }
+      .month{
+          color: #515B5E;
+          font-family: sans-serif, 'Open Sans';
+          line-height: 1.3em;
+          margin: 0;
+          padding: 0;
+          font-size: 1.5em;
+          display: inline-block;
+          text-align: center;
+
+      }
+      .month:nth-child(1){
+          width: 5%;
+          border-top: solid #D4D4D4;
+      }
+      .month:nth-child(2){
+          width: 45%;
+          border-top: solid #F5F5F5;
+      }
+      .month:nth-child(3){
+          width: 45%;
+          border-top: solid #D4D4D4;
+      }
+      .month:nth-child(4){
+          width: 5%;
+          border-top: solid #F5F5F5;
+      }
+      
+      .logo{
+          width: 100%;
+          bottom: 2em;
+          text-align: center;
+      }
+      .logo img{
+          display: inline;
+          width: 10em;
+      }
+  </style>
+    <script   src="https://code.jquery.com/jquery-3.0.0.slim.min.js"   integrity="sha256-Rf4BadfyCtsvHmO89BUZcbYvNNvZvOT08ALfEzvCsD0="   crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    
+    <script>
+        $(function(){
+            var startingDate = moment('2016-06-27');
+            var deadlineDate = moment('2016-09-01');
+            
+            function refreshDesplay(){
+                var currentDate = moment();
+                var totalTimelineLength = deadlineDate.diff(startingDate, 'days');
+                var numberOfDaysLeft = deadlineDate.diff(currentDate, 'days');
+                var numberOfHoursLeft =  (deadlineDate.diff(currentDate, 'hours') % 24);
+                
+                var numberOfDaysPassed = 
+                  (currentDate >= deadlineDate)
+                  ? totalTimelineLength
+                  : currentDate.diff(startingDate, 'days');
+    
+                $('.days-left').text(numberOfDaysLeft);
+                $('.hours-left').text(numberOfHoursLeft);
+    
+                $('.day-number').slice(0,numberOfDaysPassed).addClass('ended');
+                $('.day-number').slice(numberOfDaysPassed, numberOfDaysPassed + 1).addClass('today');
+            }
+
+            var minuteDuration = 60 * 1000;
+            refreshDesplay();
+            setTimeout(function(){
+                refreshDesplay();
+            }, minuteDuration);
+        });
+    </script>
+</head>
+
+<body>
+    <div class="main-wrap">
+        <div class="countdown-text">
+            <span class="number days-left">-</span> dana <span class="number hours-left">-</span>sati
+            <br>
+            <img src="logo.gif">
+        </div>
+        <div class="calendarWrap">
+            <div class="deadline">
+                <div class="activity"></div>
+                <div class="activity"></div>
+                <div class="activity"></div>
+            </div>
+            <div class="calendar">
+                <div class="week week-name">
+                    <div class="day day-name"><div class="name">Pon</div></div>
+                    <div class="day day-name"><div class="name">Uto</div></div>
+                    <div class="day day-name"><div class="name">Sri</div></div>
+                    <div class="day day-name"><div class="name">Čet</div></div>
+                    <div class="day day-name"><div class="name">Pet</div></div>
+                    <div class="day day-name"><div class="name">Sub</div></div>
+                    <div class="day day-name"><div class="name">Ned</div></div>
+                </div><div class="week">
+                    <div class="day day-number "><div class="number">27</div></div>
+                    <div class="day day-number "><div class="number">28</div></div>
+                    <div class="day day-number "><div class="number">29</div></div>
+                    <div class="day day-number "><div class="number">30</div></div>
+                    <div class="day day-number "><div class="number">1</div></div>
+                    <div class="day day-number "><div class="number">2</div></div>
+                    <div class="day day-number "><div class="number">3</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">4</div></div>
+                    <div class="day day-number"><div class="number">5</div></div>
+                    <div class="day day-number"><div class="number">6</div></div>
+                    <div class="day day-number"><div class="number">7</div></div>
+                    <div class="day day-number"><div class="number">8</div></div>
+                    <div class="day day-number"><div class="number">9</div></div>
+                    <div class="day day-number"><div class="number">10</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">11</div></div>
+                    <div class="day day-number"><div class="number">12</div></div>
+                    <div class="day day-number"><div class="number">13</div></div>
+                    <div class="day day-number"><div class="number">14</div></div>
+                    <div class="day day-number"><div class="number">15</div></div>
+                    <div class="day day-number"><div class="number">16</div></div>
+                    <div class="day day-number"><div class="number">17</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">18</div></div>
+                    <div class="day day-number"><div class="number">19</div></div>
+                    <div class="day day-number"><div class="number">20</div></div>
+                    <div class="day day-number"><div class="number">21</div></div>
+                    <div class="day day-number"><div class="number">22</div></div>
+                    <div class="day day-number"><div class="number">23</div></div>
+                    <div class="day day-number"><div class="number">24</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">25</div></div>
+                    <div class="day day-number"><div class="number">26</div></div>
+                    <div class="day day-number"><div class="number">27</div></div>
+                    <div class="day day-number"><div class="number">28</div></div>
+                    <div class="day day-number"><div class="number">29</div></div>
+                    <div class="day day-number"><div class="number">30</div></div>
+                    <div class="day day-number"><div class="number">31</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">1</div></div>
+                    <div class="day day-number"><div class="number">2</div></div>
+                    <div class="day day-number"><div class="number">3</div></div>
+                    <div class="day day-number"><div class="number">4</div></div>
+                    <div class="day day-number"><div class="number">5</div></div>
+                    <div class="day day-number"><div class="number">6</div></div>
+                    <div class="day day-number"><div class="number">7</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">8</div></div>
+                    <div class="day day-number"><div class="number">9</div></div>
+                    <div class="day day-number"><div class="number">10</div></div>
+                    <div class="day day-number"><div class="number">11</div></div>
+                    <div class="day day-number"><div class="number">12</div></div>
+                    <div class="day day-number"><div class="number">13</div></div>
+                    <div class="day day-number"><div class="number">14</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">15</div></div>
+                    <div class="day day-number"><div class="number">16</div></div>
+                    <div class="day day-number"><div class="number">17</div></div>
+                    <div class="day day-number"><div class="number">18</div></div>
+                    <div class="day day-number"><div class="number">19</div></div>
+                    <div class="day day-number"><div class="number">20</div></div>
+                    <div class="day day-number"><div class="number">21</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">22</div></div>
+                    <div class="day day-number"><div class="number">23</div></div>
+                    <div class="day day-number"><div class="number">24</div></div>
+                    <div class="day day-number"><div class="number">25</div></div>
+                    <div class="day day-number"><div class="number">26</div></div>
+                    <div class="day day-number"><div class="number">27</div></div>
+                    <div class="day day-number"><div class="number">28</div></div>
+                </div><div class="week">
+                    <div class="day day-number"><div class="number">29</div></div>
+                    <div class="day day-number"><div class="number">30</div></div>
+                    <div class="day day-number"><div class="number">31</div></div>
+                    <div class="day day-number not-available"><div class="number">1</div></div>
+                    <div class="day day-number not-available"><div class="number">2</div></div>
+                    <div class="day day-number not-available"><div class="number">3</div></div>
+                    <div class="day day-number not-available"><div class="number">4</div></div>
+                </div>
+            </div>
+            <div class="months">
+                <div class="month">6</div><div class="month">7</div><div class="month">8</div><div class="month">9</div>
+            </div>
+            
+        </div>
+        
+    </div>
+    <div class="logo">
+        <img src="dump-logo.png"/>
+    </div>
+</body>
+</html>
